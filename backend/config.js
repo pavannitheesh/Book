@@ -1,0 +1,1 @@
+MONGO_URL=mongodb+srv://pavan:12341234@cluster0.ikfw39s.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
