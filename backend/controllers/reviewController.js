@@ -1,5 +1,5 @@
-const Review = require('../models/Review');
-const Book = require('../models/Book');
+const Review = require('../models/user');
+const Book = require('../models/book');
 const asyncHandler = require('express-async-handler');
 
 // @desc    Get reviews for a book
@@ -156,5 +156,5 @@ const updateBookRating = async (bookId) => {
 
 module.exports ={
     updateBookRating,
-    updateReview,likeReview,getReviewsByBook,createReview,getReviewsByUser,deleteReview
+    likeReview,getReviewsByBook,createReview,getReviewsByUser,deleteReview
 }
