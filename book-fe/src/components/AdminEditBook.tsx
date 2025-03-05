@@ -25,7 +25,7 @@ const AdminEditBook = () => {
   useEffect(() => {
     const fetchBookDetails = async () => {
       try {
-        const response = await  axios.get(`http://localhost:3000/api/books/${id}`,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } });
+        const response = await  axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/books/${id}`,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } });
         const book = response.data;
 
         // Convert publication date to correct format for date input
@@ -83,7 +83,7 @@ const AdminEditBook = () => {
     e.preventDefault();
     try {
       // Update book details
-      await axios.put(`http://localhost:3000/api/books/${id}`, bookData,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } });
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/books/${id}`, bookData,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } });
       
       // Show success message and redirect
       alert('Book updated successfully!');
@@ -97,7 +97,7 @@ const AdminEditBook = () => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this book?')) {
       try {
-        await axios.delete(`http://localhost:3000/api/books/${id}`,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } });
+        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/books/${id}`,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } });
         alert('Book deleted successfully!');
         navigate('/books');
       } catch (error) {

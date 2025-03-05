@@ -46,7 +46,7 @@ const AdminAddBook = () => {
     e.preventDefault();
     try {
         const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}"); 
-      const response = await axios.post('http://localhost:3000/api/books', bookData, { headers: { 'Authorization': `Bearer ${userInfo.token}` } });
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/books`, bookData, { headers: { 'Authorization': `Bearer ${userInfo.token}` } });
       alert('Book added successfully!');
       navigate("/books");
       setBookData({

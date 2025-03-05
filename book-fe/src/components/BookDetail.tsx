@@ -22,8 +22,8 @@ const BookDetail = () => {
       try {
        
         const [bookResponse, reviewsResponse] = await Promise.all([
-          axios.get(`http://localhost:3000/api/books/${id}`,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } }),
-          axios.get(`http://localhost:3000/api/reviews?bookId=${id}`,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } })
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/books/${id}`,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } }),
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews?bookId=${id}`,{ headers: { 'Authorization': `Bearer ${userInfo.token}` } })
         ]);
         setBook(bookResponse.data);
         setReviews(reviewsResponse.data);
@@ -53,7 +53,7 @@ const BookDetail = () => {
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/reviews', {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`, {
         ...newReview,
         user: user._id,bookId:id
       },{ headers: { 'Authorization': `Bearer ${userInfo.token}` } });

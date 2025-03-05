@@ -13,7 +13,7 @@ const Books = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/books', {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/books`, {
           params: { 
             search: searchTerm, 
             genre: filterGenre 
