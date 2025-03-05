@@ -1,52 +1,92 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterGenre, setFilterGenre] = useState('');
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/books');
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to fetch books');
-        }
-console.log(data.books);
-        setBooks(data.books);
+        const response = await axios.get('http://localhost:3000/api/books', {
+          params: { 
+            search: searchTerm, 
+            genre: filterGenre 
+          }
+        });
+        setBooks(response.data.books);
         setLoading(false);
       } catch (err) {
-        setError((err as Error).message);
+        setError('Failed to fetch books');
+        console.log(err)
         setLoading(false);
       }
     };
 
     fetchBooks();
-  }, []);
+  }, [searchTerm, filterGenre]);
 
-  if (loading) {
-    return <p>Loading books...</p>;
-  }
-
-  if (error) {
-    return <p className="error">{error}</p>;
-  }
+  if (loading) return <div>Loading books...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
-    <div className="book-list">
-      <h2>All Books</h2>
-      <div className="books-container">
-        {books.map((book) => (
-          <div key={book._id} className="book-card">
-            <img src={book.coverImage} alt={book.title} className="book-cover" />
-            <div className="book-details">
-              <h3>{book.title}</h3>
-              <p><strong>Author:</strong> {book.author}</p>
-              <p><strong>Genre:</strong> {book.genre.join(', ')}</p>
-              <p><strong>Published:</strong> {new Date(book.publicationDate).toLocaleDateString()}</p>
-              <p><strong>Rating:</strong> {book.avgRating.toFixed(1)}/5 ({book.reviewCount} reviews)</p>
+    <div className="container mx-auto p-4">
+      <div className='flex justify-between items-center'>
+      <h1 className="text-2xl font-bold mb-4">Book Collection</h1>
+      
+      <Link to="/addbook"> <Button>Add Book</Button></Link>
+       </div>
+      
+      <div className="flex mb-4 space-x-4 justify-center">
+        <input 
+          type="text" 
+          placeholder="Search books..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border p-2 w-[300px]"
+        />
+        
+        <select 
+          value={filterGenre}
+          onChange={(e) => setFilterGenre(e.target.value)}
+          className="border p-2"
+        >
+          <option value="">All Genres</option>
+          <option value="Fiction">Fiction</option>
+          <option value="Non-Fiction">Non-Fiction</option>
+          <option value="Science">Science</option>
+          <option value="History">History</option>
+        </select>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {books.map(book => (
+          <div 
+            key={book._id} 
+            className="border rounded-lg p-4 hover:shadow-lg transition"
+          >
+            <img 
+              src={book.coverImage} 
+              alt={book.title} 
+              className="w-full h-64 object-cover mb-4"
+            />
+            <h2 className="text-xl font-semibold">{book.title}</h2>
+            <p className="text-gray-600">{book.author}</p>
+            <div className="flex justify-between mt-2">
+              <span className="text-yellow-500">
+                ★ {book.avgRating.toFixed(1)}
+              </span>
+              <Link 
+                to={`/books/${book._id}`} 
+                className="text-blue-500 hover:underline"
+              >
+                View Details
+              </Link>
             </div>
           </div>
         ))}

@@ -44,7 +44,7 @@ const getAllBooks = asyncHandler(async (req, res) => {
 // @access  Public
 const getBookById = asyncHandler(async (req, res) => {
   const book = await Book.findById(req.params.id);
-  
+  console.log(book);
   if (!book) {
     res.status(404);
     throw new Error('Book not found');
@@ -133,7 +133,7 @@ const deleteBook = asyncHandler(async (req, res) => {
     throw new Error('Book not found');
   }
 
-  await book.remove();
+  await Book.deleteOne({ _id: req.params.id });
 
   res.json({ message: 'Book removed' });
 });

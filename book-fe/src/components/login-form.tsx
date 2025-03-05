@@ -36,8 +36,9 @@ export function LoginForm({
 
       // Save token to localStorage and redirect to home
       localStorage.setItem('userInfo', JSON.stringify(data));
-      alert("logged in")
-      navigate('/');
+      alert("logged in");
+      navigate('/books');
+      console.log("moved to books")
     } catch (err) {
       setError((err as Error).message);
     }
@@ -54,9 +55,9 @@ export function LoginForm({
               <div className="flex size-8 items-center justify-center rounded-md">
                 <GalleryVerticalEnd className="size-6" />
               </div>
-              <span className="sr-only">Acme Inc.</span>
+             
             </a>
-            <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
+            <h1 className="text-xl font-bold">Welcome to Book</h1>
             <div className="text-center text-sm">
               Don&apos;t have an account?{" "}
               <Link to="/signup" className="underline underline-offset-4">

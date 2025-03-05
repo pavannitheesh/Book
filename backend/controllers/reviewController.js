@@ -1,4 +1,4 @@
-const Review = require('../models/user');
+const {Review} = require('../models/user');
 const Book = require('../models/book');
 const asyncHandler = require('express-async-handler');
 
@@ -13,7 +13,7 @@ const getReviewsByBook = asyncHandler(async (req, res) => {
     throw new Error('Book ID is required');
   }
   
-  const reviews = await Review.find({ book: bookId, approved: true })
+  const reviews = await Review.find({ book: bookId })
     .sort({ createdAt: -1 })
     .populate('user', 'name avatar');
   
@@ -42,7 +42,7 @@ const createReview = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('All fields are required');
   }
-  
+  console.log("user"+req.user);
   // Check if user has already reviewed this book
   const existingReview = await Review.findOne({ 
     user: req.user._id, 
@@ -50,7 +50,8 @@ const createReview = asyncHandler(async (req, res) => {
   });
   
   if (existingReview) {
-    res.status(400);
+    
+    res.json("you have already reviewed");
     throw new Error('You have already reviewed this book');
   }
   
@@ -132,7 +133,7 @@ const likeReview = asyncHandler(async (req, res) => {
 // Helper function to update book rating
 const updateBookRating = async (bookId) => {
   // Get all approved reviews for the book
-  const reviews = await Review.find({ book: bookId, approved: true });
+  const reviews = await Review.find({ book: bookId });
   
   if (reviews.length === 0) {
     // No reviews, reset rating to 0
