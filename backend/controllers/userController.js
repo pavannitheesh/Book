@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const {User} = require('../models/user');
-
+const Book = require('../models/book');
+const mongoose = require('mongoose');
 // @desc    Get user profile
 // @route   GET /api/users/:id
 // @access  Private
@@ -61,8 +62,62 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       favoriteBooks: updatedUser.favoriteBooks,
     });
   });
+  const toggleFavorite =asyncHandler(async(req,res)=>{
+    try {
+      const { bookId } = req.body;
+      
+      // Validate bookId
+      if (!bookId || !mongoose.Types.ObjectId.isValid(bookId)) {
+        return res.status(400).json({ message: 'Invalid book ID' });
+      }
+      
+      // Check if book exists
+      const bookExists = await Book.exists({ _id: bookId });
+      if (!bookExists) {
+        return res.status(404).json({ message: 'Book not found' });
+      }
+      
+      // Get user
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // Check if book is already in favorites
+      const bookIndex = user.favoriteBooks.indexOf(bookId);
+      let message = '';
+      
+      if (bookIndex > -1) {
+        // Book exists in favorites, remove it
+        user.favoriteBooks.splice(bookIndex, 1);
+        message = 'Book removed from favorites';
+      } else {
+        // Book not in favorites, add it
+        user.favoriteBooks.push(bookId);
+        message = 'Book added to favorites';
+      }
+      
+      // Save updated user
+      await user.save();
+      
+      res.status(200).json({ 
+        success: true, 
+        message,
+        favoriteBooks: user.favoriteBooks
+      });
+      
+    } catch (error) {
+      console.error('Error toggling favorite book:', error);
+      res.status(500).json({ 
+        message: 'Server error',
+        error: error.message 
+      });
+    }
+  });
+  
 
 module.exports = {
   getUserProfile,
   updateUserProfile,
+  toggleFavorite
 };

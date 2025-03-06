@@ -4,6 +4,7 @@ const { protect } = require('../middleware/authMiddleware');
 const {
   getUserProfile,
   updateUserProfile,
+  toggleFavorite,
 } = require('../controllers/userController');
 
 // @route   GET /api/users/:id
@@ -15,5 +16,7 @@ router.get('/:id', protect, getUserProfile);
 // @desc    Update user profile
 // @access  Private
 router.put('/:id', protect, updateUserProfile);
+router.post('/favorites', protect,toggleFavorite);
+
 
 module.exports = router;

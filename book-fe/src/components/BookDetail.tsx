@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
+import { Badge } from './ui/badge';
+import Addtofav from './AddtoFav';
 
 const BookDetail = () => {
   const [book, setBook] = useState(null);
@@ -40,15 +42,7 @@ const BookDetail = () => {
     fetchBookDetails();
   }, [id]);
 
-  const handleAddToFavorites = async () => {
-    try {
-      await axios.post('http:localhost:3000/api/user/favorites', { bookId: id });
-      alert('Book added to favorites!');
-    } catch (err) {
-      alert('Failed to add book to favorites');
-      console.log(err)
-    }
-  };
+  
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -74,12 +68,12 @@ const BookDetail = () => {
   if (!book) return <div>Book not found</div>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className=" mx-auto p-4">
       <div className='flex justify-between'>
       <h1 className="text-4xl font-semibold mb-4">Book Detail</h1>
       <Button><Link to={`/edit/${id}`}>Edit</Link></Button>
       </div>
-      <div className="flex flex-col md:flex-row">
+      {/* <div className="flex flex-col md:flex-row">
         <div className="md:w-1/3 mb-4 md:mr-8">
           <img 
             src={book.coverImage} 
@@ -117,7 +111,62 @@ const BookDetail = () => {
             <strong>ISBN:</strong> {book.isbn}
           </div>
         </div>
-      </div>
+      </div> */}
+       <div className="grid p-4 sm:p-6 gap-2 dark:text-zinc-50">
+      <div className="flex flex-col sm:flex-row gap-5 w-full max-w-5xl m-auto">
+        <div className="flex flex-col items-center sm:sticky sm:top-[81px] pb-2 rounded-lg h-full">
+          <img
+            width="512px"
+            loading="loading..."
+            src={book.coverImage} 
+            alt={book.title} 
+            className="min-w-full md:min-w-lg object-cover rounded-md"
+          />
+        </div>
+        <div className="h-fit w-full space-y-2">
+          <div className="w-full h-full border-2 rounded-lg p-4 border-slate-200 dark:border-zinc-800">
+            <h1 className="scroll-m-20 mb-5 text-4xl font-bold tracking-tight lg:text-5xl">
+              {book?.title}
+            </h1>
+            <div className="flex gap-2 items-end">
+              <h3 className="italic">by</h3>
+              <h2 className="text-2xl font-semibold tracking-tight">
+                {book?.author}
+              </h2>
+            </div>
+            <div className="flex space-x-4 text-sm py-4 my-2 border-b-2 border-t-2 border-slate-200 dark:border-zinc-800">
+              <div className="pr-4 border-r-2 text-right border-slate-200 dark:border-zinc-800">
+                <h3 className="italic w-24 pb-2">Year Published</h3>
+                <h4 className="font-semibold">{new Date(book?.publicationDate).toLocaleDateString()}</h4>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <h3 className="italic w-full">Genre</h3>
+                {book?.genre?.map((genre, index) => (
+                  <Badge variant="outline" key={index}>
+                    {genre}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            {book?.description && (
+              <div>
+                <h3 className="text-xl font-semibold tracking-tight">
+                  Description
+                </h3>
+                <blockquote className="my-4 italic border-slate-200 dark:border-zinc-800">
+                  {book?.description}
+                </blockquote>
+              </div>
+            )}
+             <div className="flex gap-2 mb-3 pt-2 items-end  border-t-2 border-slate-200 dark:border-zinc-800">
+              <h3 className="italic">ISBN</h3>
+              <h2 className="text-lg font-semibold tracking-tight">
+                {book?.isbn}
+              </h2>
+            </div>
+            <Addtofav id={id}/>
+          </div>
+          </div></div></div>
 
       <div className="mt-8">
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
