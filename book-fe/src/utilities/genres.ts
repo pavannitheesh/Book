@@ -12,7 +12,7 @@ const genres = [
     "Children's Fiction",
   
     // Subgenres within Fiction (consider including these as options within their respective parent genres)
-    "Action Adventure Mystery",
+    "Action", "Mystery",
     "Cozy Mystery",
     "Crime Thriller",
     "Detective Fiction",
@@ -56,5 +56,8 @@ const genres = [
     "Post-Apocalyptic",
     "Drama",
   ];
-  
-  export default genres;
+  const genresList = genres.map(genre => ({
+    value: genre.toLowerCase().replace(/[^a-z0-9]+/g, "-"), 
+    label: genre
+  }));
+  export default genresList;
