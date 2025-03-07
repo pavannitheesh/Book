@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-
+import { Label } from './ui/Label';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Button } from './ui/button';
+import { X } from 'lucide-react';
 const AdminEditBook = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,9 +23,10 @@ const AdminEditBook = () => {
 
   const [genre, setGenre] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}")
   // Fetch book details when component mounts
+  
   useEffect(() => {
     const fetchBookDetails = async () => {
       try {
@@ -116,10 +121,11 @@ const AdminEditBook = () => {
       
       <form onSubmit={handleSubmit} className="max-w-xl mx-auto">
         <div className="mb-4">
-          <label className="block mb-2">Title</label>
-          <input 
+          <Label className="block mb-2">Title</Label>
+          <Input 
             type="text"
             name="title"
+            placeholder="Title of the Book"
             value={bookData.title}
             onChange={handleInputChange}
             className="w-full border p-2 rounded"
@@ -128,8 +134,8 @@ const AdminEditBook = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2">Author</label>
-          <input 
+          <Label className="block mb-2">Author</Label>
+          <Input 
             type="text"
             name="author"
             value={bookData.author}
@@ -140,20 +146,19 @@ const AdminEditBook = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2">Description</label>
-          <textarea 
+          <Label className="block mb-2">Description</Label>
+          <Textarea 
             name="description"
             value={bookData.description}
             onChange={handleInputChange}
             className="w-full border p-2 rounded"
-            rows="4"
             required
-          ></textarea>
+          ></Textarea>
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2">Cover Image URL</label>
-          <input 
+          <Label className="block mb-2">Cover Image URL</Label>
+          <Input 
             type="url"
             name="coverImage"
             value={bookData.coverImage}
@@ -164,22 +169,22 @@ const AdminEditBook = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2">Genres</label>
+          <Label className="block mb-2">Genres</Label>
           <div className="flex mb-2">
-            <input 
+            <Input 
               type="text"
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
               className="flex-grow border p-2 rounded mr-2"
               placeholder="Add genre"
             />
-            <button 
+            <Button 
               type="button"
               onClick={handleAddGenre}
-              className="bg-blue-500 text-white p-2 rounded"
+            className='cursor-pointer'
             >
               Add Genre
-            </button>
+            </Button>
           </div>
           
           <div className="flex flex-wrap gap-2">
@@ -189,33 +194,45 @@ const AdminEditBook = () => {
                 className="bg-gray-200 px-2 py-1 rounded flex items-center"
               >
                 {g}
-                <button 
+                <Button variant="ghost"
                   type="button"
                   onClick={() => handleRemoveGenre(g)}
-                  className="ml-2 text-red-500"
+                
                 >
-                  ✕
-                </button>
+                 <X/>
+                </Button>
               </span>
             ))}
           </div>
         </div>
-
+<div className='flex space-x-8'>
         <div className="mb-4">
-          <label className="block mb-2">Publication Date</label>
-          <input 
+          <Label className="block mb-2">Publication Date</Label>
+          <Input 
             type="date"
             name="publicationDate"
             value={bookData.publicationDate}
             onChange={handleInputChange}
-            className="w-full border p-2 rounded"
+            className="w-fit border p-2 rounded"
             required
           />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2">Publisher</label>
-          <input 
+          <Label className="block mb-2">ISBN</Label>
+          <Input 
+            type="text"
+            name="isbn"
+            value={bookData.isbn}
+            onChange={handleInputChange}
+            className="w-full border p-2 rounded"
+            required
+          />
+        </div>
+        </div>
+        <div className="mb-4">
+          <Label className="block mb-2">Publisher</Label>
+          <Input 
             type="text"
             name="publisher"
             value={bookData.publisher}
@@ -225,45 +242,34 @@ const AdminEditBook = () => {
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block mb-2">ISBN</label>
-          <input 
-            type="text"
-            name="isbn"
-            value={bookData.isbn}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded"
-            required
-          />
-        </div>
 
         <div className="mb-4">
-          <label className="flex items-center">
-            <input 
+          <Label className="flex items-center">Featured Book
+            <Input 
               type="checkbox"
               name="featured"
               checked={bookData.featured}
               onChange={handleInputChange}
-              className="mr-2"
-            />
-            Featured Book
-          </label>
+              className='w-4 h-4 text-black bg-gray-100 border-gray-300 rounded-sm focus:ring-black dark:focus:ring-black dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+            /></Label>
+            
+          
         </div>
 
-        <div className="flex space-x-4">
-          <button 
+        <div className="flex justify-between">
+          <Button 
             type="submit" 
-            className="flex-grow bg-green-500 text-white p-2 rounded hover:bg-green-600"
+           
           >
             Update Book
-          </button>
-          <button 
+          </Button>
+          <Button variant="destructive" 
             type="button"
             onClick={handleDelete}
-            className="flex-grow bg-red-500 text-white p-2 rounded hover:bg-red-600"
+           
           >
             Delete Book
-          </button>
+          </Button>
         </div>
       </form>
     </div>
