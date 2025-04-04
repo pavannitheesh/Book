@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
 import { Badge } from './ui/badge';
 import Addtofav from './AddtoFav';
+import StarRating from './StarRating';
 
 const BookDetail = () => {
   const [book, setBook] = useState(null);
@@ -68,167 +69,138 @@ const BookDetail = () => {
   if (!book) return <div>Book not found</div>;
 
   return (
-    <div className=" mx-auto p-4">
+    <div className="mx-auto p-4 bg-background text-foreground">
       <div className='flex justify-between'>
-      <h1 className="text-4xl font-semibold mb-4">Book Detail</h1>
-      <Button><Link to={`/edit/${id}`}>Edit</Link></Button>
+        <h1 className="text-4xl font-semibold mb-4">Book Detail</h1>
+        <Button><Link to={`/edit/${id}`}>Edit</Link></Button>
       </div>
-      {/* <div className="flex flex-col md:flex-row">
-        <div className="md:w-1/3 mb-4 md:mr-8">
-          <img 
-            src={book.coverImage} 
-            alt={book.title} 
-            className="w-full h-96 object-cover rounded-lg"
-          />
-          <button 
-            onClick={handleAddToFavorites}
-            className="mt-4 w-full bg-blue-500 text-white p-2 rounded"
-          >
-            Add to Favorites
-          </button>
-        </div>
-        
-        <div className="md:w-2/3">
-          <h1 className="text-3xl font-bold">{book.title}</h1>
-          <p className="text-xl text-gray-600 mb-2">by {book.author}</p>
-          
-          <div className="mb-4">
-            <span className="text-yellow-500 text-lg">
-              ★ {book.avgRating.toFixed(1)} ({book.reviewCount} reviews)
-            </span>
+      <div className="grid p-4 sm:p-6 gap-2">
+        <div className="flex flex-col sm:flex-row gap-5 w-full max-w-5xl m-auto">
+          <div className="flex flex-col items-center sm:sticky sm:top-[81px] pb-2 rounded-lg h-full">
+            <img
+              width="512px"
+              loading="loading..."
+              src={book.coverImage} 
+              alt={book.title} 
+              className="min-w-full md:min-w-lg object-cover rounded-md shadow-md"
+            />
           </div>
-          
-          <div className="mb-4">
-            <h2 className="font-semibold">Description</h2>
-            <p>{book.description}</p>
-          </div>
-          
-          <div className="mb-4">
-            <strong>Genre:</strong> {book.genre.join(', ')}
-            <br />
-            <strong>Published:</strong> {new Date(book.publicationDate).toLocaleDateString()}
-            <br />
-            <strong>ISBN:</strong> {book.isbn}
-          </div>
-        </div>
-      </div> */}
-       <div className="grid p-4 sm:p-6 gap-2 dark:text-zinc-50">
-      <div className="flex flex-col sm:flex-row gap-5 w-full max-w-5xl m-auto">
-        <div className="flex flex-col items-center sm:sticky sm:top-[81px] pb-2 rounded-lg h-full">
-          <img
-            width="512px"
-            loading="loading..."
-            src={book.coverImage} 
-            alt={book.title} 
-            className="min-w-full md:min-w-lg object-cover rounded-md"
-          />
-        </div>
-        <div className="h-fit w-full space-y-2">
-          <div className="w-full h-full border-2 rounded-lg p-4 border-slate-200 dark:border-zinc-800">
-            <h1 className="scroll-m-20 mb-5 text-4xl font-bold tracking-tight lg:text-5xl">
-              {book?.title}
-            </h1>
-            <div className="flex gap-2 items-end">
-              <h3 className="italic">by</h3>
-              <h2 className="text-2xl font-semibold tracking-tight">
-                {book?.author}
-              </h2>
-            </div>
-            <div className="flex space-x-4 text-sm py-4 my-2 border-b-2 border-t-2 border-slate-200 dark:border-zinc-800">
-              <div className="pr-4 border-r-2 text-right border-slate-200 dark:border-zinc-800">
-                <h3 className="italic w-24 pb-2">Year Published</h3>
-                <h4 className="font-semibold">{new Date(book?.publicationDate).toLocaleDateString()}</h4>
+          <div className="h-fit w-full space-y-2">
+            <div className="w-full h-full border rounded-lg p-4 border-border bg-card text-card-foreground">
+              <h1 className="scroll-m-20 mb-5 text-4xl font-bold tracking-tight lg:text-5xl">
+                {book?.title}
+              </h1>
+              <div className="flex gap-2 items-end">
+                <h3 className="italic text-muted-foreground">by</h3>
+                <h2 className="text-2xl font-semibold tracking-tight">
+                  {book?.author}
+                </h2>
               </div>
-              <div className="flex flex-wrap gap-2">
-                <h3 className="italic w-full">Genre</h3>
-                {book?.genre?.map((genre, index) => (
-                  <Badge variant="outline" key={index}>
-                    {genre}
-                  </Badge>
-                ))}
+              <div className="flex space-x-4 text-sm py-4 my-2 border-b border-t border-border">
+                <div className="pr-4 border-r text-right border-border">
+                  <h3 className="italic w-24 pb-2 text-muted-foreground">Year Published</h3>
+                  <h4 className="font-semibold">{new Date(book?.publicationDate).toLocaleDateString()}</h4>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <h3 className="italic w-full text-muted-foreground">Genre</h3>
+                  {book?.genre?.map((genre, index) => (
+                    <Badge variant="outline" key={index}>
+                      {genre}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-            </div>
-            {book?.description && (
-              <div>
-                <h3 className="text-xl font-semibold tracking-tight">
-                  Description
-                </h3>
-                <blockquote className="my-4 italic border-slate-200 dark:border-zinc-800">
-                  {book?.description}
-                </blockquote>
+              {book?.description && (
+                <div>
+                  <h3 className="text-xl font-semibold tracking-tight">
+                    Description
+                  </h3>
+                  <blockquote className="my-4 italic text-muted-foreground border-border">
+                    {book?.description}
+                  </blockquote>
+                </div>
+              )}
+              <div className="flex gap-2 mb-3 pt-2 items-end border-t border-border">
+                <h3 className="italic text-muted-foreground">ISBN</h3>
+                <h2 className="text-lg font-semibold tracking-tight">
+                  {book?.isbn}
+                </h2>
               </div>
-            )}
-             <div className="flex gap-2 mb-3 pt-2 items-end  border-t-2 border-slate-200 dark:border-zinc-800">
-              <h3 className="italic">ISBN</h3>
-              <h2 className="text-lg font-semibold tracking-tight">
-                {book?.isbn}
-              </h2>
+              <Addtofav id={id}/>
             </div>
-            <Addtofav id={id}/>
           </div>
-          </div></div></div>
+        </div>
+      </div>
+    
 
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-        
-        {/* Review Form */}
-        <form onSubmit={handleSubmitReview} className="mb-6">
-          <div className="mb-4">
-            <label className="block mb-2">Rating</label>
-            <select 
-              value={newReview.rating}
-              onChange={(e) => setNewReview({...newReview, rating: parseInt(e.target.value)})}
-              className="w-full border p-2"
-            >
-              {[1,2,3,4,5].map(rating => (
-                <option key={rating} value={rating}>{rating} Stars</option>
-              ))}
-            </select>
+    <div className="mt-8 max-w-4xl mx-auto">
+      <h2 className="text-3xl font-bold mb-6">Reviews</h2>
+      
+      <div className="bg-card text-card-foreground rounded-lg shadow-sm p-4 mb-6 border border-border">
+        <form onSubmit={handleSubmitReview} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Rating</label>
+            <StarRating
+              rating={newReview.rating}
+              onRatingChange={(rating) => setNewReview({...newReview, rating})}
+            />
           </div>
           
-          <div className="mb-4">
-            <label className="block mb-2">Review Title</label>
+          <div>
             <input 
               type="text"
               value={newReview.title}
               onChange={(e) => setNewReview({...newReview, title: e.target.value})}
-              className="w-full border p-2"
+              className="w-full rounded-md border border-border p-2 bg-background text-foreground"
+              placeholder="Review title"
               required
             />
           </div>
-          
-          <div className="mb-4">
-            <label className="block mb-2">Review Content</label>
-            <textarea 
-              value={newReview.content}
-              onChange={(e) => setNewReview({...newReview, content: e.target.value})}
-              className="w-full border p-2"
-              rows={4}
-              required
-            ></textarea>
-          </div>
-          
-          <button 
-            type="submit" 
-            className="bg-green-500 text-white p-2 rounded"
-          >
-            Submit Review
-          </button>
-        </form>
-
+            
+            <div>
+              <textarea 
+                value={newReview.content}
+                onChange={(e) => setNewReview({...newReview, content: e.target.value})}
+                className="w-full rounded-md border border-border p-2 bg-transparent"
+                rows={3}
+                placeholder="Share your thoughts about the book"
+                required
+              ></textarea>
+            </div>
+            
+            <Button 
+              type="submit"
+              className="w-full md:w-auto"
+            >
+              Submit Review
+            </Button>
+          </form>
+        </div>
+        
         {/* Reviews List */}
-        <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {reviews.map(review => (
-            <div key={review._id} className="border-b py-4">
-              <div className="flex justify-between">
-                <h3 className="font-semibold">{review.title}</h3>
-                <span className="text-yellow-500">
-                  ★ {review.rating}
-                </span>
-              </div>
-              <p className="text-gray-600">{review.content}</p>
-              <div className="text-sm text-gray-500 mt-2">
-                {new Date(review.createdAt).toLocaleDateString()}
+            <div key={review._id} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm p-4 border border-slate-200 dark:border-zinc-700">
+              <div className="flex items-start gap-3">
+                <img
+                  src={review.user?.avatar || `https://ui-avatars.com/api/?name=${review.user?.name || 'User'}&background=random`}
+                  alt={review.user?.name}
+                  className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <h3 className="text-base font-semibold truncate">{review.title}</h3>
+                    <StarRating rating={review.rating} onRatingChange={() => {}} editable={false} />
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-zinc-400 mb-2">
+                    {new Date(review.createdAt).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric'
+                    })}
+                  </p>
+                  <p className="text-sm text-slate-600 dark:text-zinc-300">{review.content}</p>
+                </div>
               </div>
             </div>
           ))}

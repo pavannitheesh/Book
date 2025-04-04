@@ -5,7 +5,7 @@ import { Label } from './ui/Label';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 const AdminEditBook = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,6 +24,7 @@ const AdminEditBook = () => {
   const [genre, setGenre] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [imageError, setImageError] = useState(false);
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}")
   // Fetch book details when component mounts
   
@@ -112,14 +113,20 @@ const AdminEditBook = () => {
     }
   };
 
-  if (loading) return <div>Loading book details...</div>;
+  if (loading) return (
+    <div className="w-full grid items-center min-h-screen">
+      <Loader2 className="mx-auto h-10 w-10 animate-spin" />
+    </div>
+  );
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Edit Book</h1>
-      
-      <form onSubmit={handleSubmit} className="max-w-xl mx-auto">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8">Edit Book</h1>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md space-y-4">
         <div className="mb-4">
           <Label className="block mb-2">Title</Label>
           <Input 
@@ -128,7 +135,7 @@ const AdminEditBook = () => {
             placeholder="Title of the Book"
             value={bookData.title}
             onChange={handleInputChange}
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             required
           />
         </div>
@@ -140,7 +147,7 @@ const AdminEditBook = () => {
             name="author"
             value={bookData.author}
             onChange={handleInputChange}
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             required
           />
         </div>
@@ -151,21 +158,39 @@ const AdminEditBook = () => {
             name="description"
             value={bookData.description}
             onChange={handleInputChange}
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             required
           ></Textarea>
         </div>
 
-        <div className="mb-4">
-          <Label className="block mb-2">Cover Image URL</Label>
-          <Input 
-            type="url"
-            name="coverImage"
-            value={bookData.coverImage}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded"
-            required
-          />
+        <div className="mb-4 flex gap-4">
+          <div className="flex-1">
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Cover Image URL</Label>
+            <Input 
+              type="url"
+              name="coverImage"
+              value={bookData.coverImage}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black dark:bg-gray-700 dark:text-gray-100"
+              required
+            />
+          </div>
+          {bookData.coverImage && (
+            <div className="w-48 h-48 relative border rounded-md overflow-hidden">
+              <img
+                src={bookData.coverImage}
+                alt="Book cover preview"
+                className="w-full h-full object-cover"
+                onError={() => setImageError(true)}
+                onLoad={() => setImageError(false)}
+              />
+              {imageError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400 text-sm">
+                  Invalid image URL
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="mb-4">
@@ -225,7 +250,7 @@ const AdminEditBook = () => {
             name="isbn"
             value={bookData.isbn}
             onChange={handleInputChange}
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             required
           />
         </div>
@@ -237,7 +262,7 @@ const AdminEditBook = () => {
             name="publisher"
             value={bookData.publisher}
             onChange={handleInputChange}
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             required
           />
         </div>
@@ -271,7 +296,9 @@ const AdminEditBook = () => {
             Delete Book
           </Button>
         </div>
-      </form>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

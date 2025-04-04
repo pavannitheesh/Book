@@ -2,19 +2,27 @@ import React, { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import BookCard from './BookCard';
-import { Navbar } from './Navbar';
+import Sidebar from './Sidebar';
+
 import { Input } from './ui/input';
 import { Select } from './Select';
 
-const Books = () => {
+interface BooksProps {
+  searchTerm?: string;
+  setSearchTerm?: (term: string) => void;
+  filterGenre?: string;
+  setFilterGenre?: (genre: string) => void;
+}
+
+const Books: React.FC<BooksProps> = ({ searchTerm = '', setSearchTerm = () => {}, filterGenre = '', setFilterGenre = () => {} }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterGenre, setFilterGenre] = useState('');
-  
+  const navigate = useNavigate();
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+  const userInitial = userInfo.name ? userInfo.name.charAt(0).toUpperCase() : '?';
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -36,27 +44,16 @@ const Books = () => {
 
     fetchBooks();
   }, [searchTerm, filterGenre]);
+  const Logout=()=>{
+    localStorage.removeItem('userInfo');
+    navigate('/login');
 
+  }
   // if (loading) return <div>Loading books...</div>;
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <Navbar/>
-      <Link to="/addbook"> <Button>Add Book</Button></Link>
-      
-      <div className="flex mb-4 space-x-4 justify-center">
-        <Input 
-          type="text" 
-          placeholder="Search books..." 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-           className="w-full rounded-lg bg-background pl-10 pr-14 sm:w-[200px] lg:w-[336px]"
-        />
-         <Select onChange={(value: React.SetStateAction<string>) => setFilterGenre(value)} />
-        
-
-      </div>
+    <div>
 
       
       {loading ? (
@@ -97,7 +94,9 @@ const Books = () => {
       </div>
       )
       }
-    </div>
+      </div>
+  
+   
   );
 };
 

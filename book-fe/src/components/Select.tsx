@@ -18,9 +18,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import genresList from './../utilities/genres';
-export function Select({onChange}) {
+export function Select({onChange, value: externalValue, onValueChange}) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [value, setValue] = React.useState(externalValue || "")
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

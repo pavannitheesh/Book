@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const {User} = require('../models/user');
 const generateToken = require('../utils/generateToken');
+const { generateRandomAvatar } = require('../utils/cloudinary');
 
 // @desc    Register a new user
 // @route   POST /api/auth/signup
@@ -15,11 +16,15 @@ const signup = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
 
+  // Generate random avatar
+  const avatarUrl = await generateRandomAvatar(email);
+
   // Create new user
   const user = await User.create({
     name,
     email,
     password,
+    avatar: avatarUrl
   });
 
   if (user) {
@@ -29,6 +34,7 @@ const signup = asyncHandler(async (req, res) => {
       email: user.email,
       role: user.role,
       token: generateToken(user._id), // Generate JWT
+      avatar: user.avatar
     });
   } else {
     res.status(400);
@@ -53,6 +59,7 @@ const signin = asyncHandler(async (req, res) => {
       email: user.email,
       role: user.role,
       token: generateToken(user._id), // Generate JWT
+      avatar: user.avatar
     });
   } else {
     res.status(401);
